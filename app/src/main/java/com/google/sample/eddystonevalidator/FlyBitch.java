@@ -20,7 +20,7 @@ public class FlyBitch extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
@@ -88,5 +88,7 @@ public class FlyBitch extends Service {
 		super.onDestroy();
 		if (chatHead != null) windowManager.removeView(chatHead);
 	}
+
+
 
 }
