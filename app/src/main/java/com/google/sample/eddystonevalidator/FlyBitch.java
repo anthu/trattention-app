@@ -4,6 +4,7 @@ package com.google.sample.eddystonevalidator;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -26,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -35,7 +37,7 @@ public class FlyBitch extends Service  {
 	BluetoothLeScanner leScanner;
 	private WindowManager windowManager;
 	private ImageView chatHead;
-
+    MyScanCallback mCallback;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -65,26 +67,28 @@ public class FlyBitch extends Service  {
 		ArrayList<ScanFilter> filterList = new ArrayList<ScanFilter>();
 		filterList.add(filter);
 
-		leScanner.startScan(/*filterList, settings,*/ new MyScanCallback(this) {
-			@Override
-			public void onScanResult(int callbackType, ScanResult result) {
-				super.onScanResult(callbackType, result);
-				Toast toast = Toast.makeText(myService,(CharSequence)result.getDevice().getName(), Toast.LENGTH_SHORT);
-				toast.show();
-				//this.myService.popUp();
-			}
+        mCallback = new MyScanCallback(this) {
+            @Override
+            public void onScanResult(int callbackType, ScanResult result) {
+                super.onScanResult(callbackType, result);
+                Toast toast = Toast.makeText(myService,(CharSequence)(result.getDevice().getName() + new Date().toString()), Toast.LENGTH_SHORT);
+                toast.show();
+                //this.myService.popUp();
+            }
 
-			@Override
-			public void onBatchScanResults(List<ScanResult> results) {
-				super.onBatchScanResults(results);
-			}
+            @Override
+            public void onBatchScanResults(List<ScanResult> results) {
+                super.onBatchScanResults(results);
+            }
 
-			@Override
-			public void onScanFailed(int errorCode) {
-				super.onScanFailed(errorCode);
-				this.myService.popUp();
-			}
-		});
+            @Override
+            public void onScanFailed(int errorCode) {
+                super.onScanFailed(errorCode);
+                this.myService.popUp();
+            }
+        };
+
+		leScanner.startScan(/*filterList, settings,*/ mCallback);
 
 
 
@@ -161,30 +165,23 @@ public class FlyBitch extends Service  {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
-		return START_STICKY;
+		return START_NOT_STICKY;
 	}
 
 
 	@Override
 	public void onDestroy() {
-		super.onDestroy();
-		leScanner.stopScan(new ScanCallback() {
-			@Override
-			public void onScanResult(int callbackType, ScanResult result) {
-				super.onScanResult(callbackType, result);
-			}
+        bluetoothAdapter.stopLeScan(new BluetoothAdapter.LeScanCallback(){
 
-			@Override
-			public void onBatchScanResults(List<ScanResult> results) {
-				super.onBatchScanResults(results);
-			}
+            @Override
+            public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
 
-			@Override
-			public void onScanFailed(int errorCode) {
-				super.onScanFailed(errorCode);
-			}
-		});
+            }
+        });
+		leScanner.stopScan(mCallback);
 		if (chatHead != null) windowManager.removeView(chatHead);
+
+		super.onDestroy();
 	}
 
 
