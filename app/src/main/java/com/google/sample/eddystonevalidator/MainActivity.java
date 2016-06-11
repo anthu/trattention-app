@@ -16,7 +16,10 @@ package com.google.sample.eddystonevalidator;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -35,7 +38,7 @@ import com.google.android.gms.nearby.messages.MessageListener;
 /**
  * MainActivity for the Eddystone Validator sample app.
  */
-public class MainActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends FragmentActivity  implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "Main Activity";
     GoogleApiClient mGoogleApiClient;
     private Message mActiveMessage;
@@ -44,11 +47,10 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mGoogleApiClient = new GoogleApiClient.Builder(this)
+  /*mGoogleApiClient = new GoogleApiClient.Builder(this)
             .addApi(Nearby.MESSAGES_API)
-            .addConnectionCallbacks(this)
-            .enableAutoManage(this, this)
-            .build();
+            .addConnectionCallbacks(this)//.enableAutoManage(this,this)
+            .build();*/
 
         mMessageListener = new MessageListener() {
             @Override
@@ -77,7 +79,20 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
       @Override
       public void onClick(View v) {
-        startService(new Intent(MainActivity.this, FlyBitch.class));
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(!Settings.canDrawOverlays(getApplicationContext())) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent,0);
+
+            } else {
+                startService(new Intent(getApplicationContext(), FlyBitch.class));
+            }
+        } else {
+
+            startService(new Intent(MainActivity.this, FlyBitch.class));
+        }
       }
     });
 
@@ -91,7 +106,13 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     });
   }
 
-  @Override
+    @Override
+    protected void onStart() {
+        super.onStart();
+       // mGoogleApiClient.connect();
+    }
+
+    @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.menu_main, menu);
     return true;
@@ -109,6 +130,8 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     return super.onOptionsItemSelected(item);
   }
+
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -131,6 +154,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     public void onConnectionSuspended(int i) {
 
     }
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
