@@ -23,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,11 +65,13 @@ public class FlyBitch extends Service  {
 		ArrayList<ScanFilter> filterList = new ArrayList<ScanFilter>();
 		filterList.add(filter);
 
-		leScanner.startScan(filterList, settings, new MyScanCallback(this) {
+		leScanner.startScan(/*filterList, settings,*/ new MyScanCallback(this) {
 			@Override
 			public void onScanResult(int callbackType, ScanResult result) {
 				super.onScanResult(callbackType, result);
-				this.myService.popUp();
+				Toast toast = Toast.makeText(myService,(CharSequence)result.getDevice().getName(), Toast.LENGTH_SHORT);
+				toast.show();
+				//this.myService.popUp();
 			}
 
 			@Override
@@ -93,7 +96,7 @@ public class FlyBitch extends Service  {
 
 			public MyScanCallback(FlyBitch myService) {
 				super();
-				myService = myService;
+				this.myService = myService;
 			}
 
 	}
@@ -157,7 +160,7 @@ public class FlyBitch extends Service  {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		this.popUp();
+
 		return START_STICKY;
 	}
 
@@ -165,6 +168,22 @@ public class FlyBitch extends Service  {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		leScanner.stopScan(new ScanCallback() {
+			@Override
+			public void onScanResult(int callbackType, ScanResult result) {
+				super.onScanResult(callbackType, result);
+			}
+
+			@Override
+			public void onBatchScanResults(List<ScanResult> results) {
+				super.onBatchScanResults(results);
+			}
+
+			@Override
+			public void onScanFailed(int errorCode) {
+				super.onScanFailed(errorCode);
+			}
+		});
 		if (chatHead != null) windowManager.removeView(chatHead);
 	}
 
