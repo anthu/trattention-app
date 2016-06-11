@@ -2,5 +2,7 @@
 
     <string name="app_name">Eddystone Validator</string>
     <string name="action_settings">Settings</string>
+    <string name="start">Start Trattention</string>
+    <string name="stop">Stop Trattention</string>
 
 </resources>
