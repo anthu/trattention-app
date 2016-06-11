@@ -17,19 +17,52 @@ package com.google.sample.eddystonevalidator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.messages.Message;
+import com.google.android.gms.nearby.messages.MessageListener;
+
 /**
  * MainActivity for the Eddystone Validator sample app.
  */
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    private static final String TAG = "Main Activity";
+    GoogleApiClient mGoogleApiClient;
+    private Message mActiveMessage;
+    private MessageListener mMessageListener;
 
-  @Override
+    @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    mGoogleApiClient = new GoogleApiClient.Builder(this)
+            .addApi(Nearby.MESSAGES_API)
+            .addConnectionCallbacks(this)
+            .enableAutoManage(this, this)
+            .build();
+
+        mMessageListener = new MessageListener() {
+            @Override
+            public void onFound(Message message) {
+                String messageAsString = new String(message.getContent());
+                Log.d(TAG, "Found message: " + messageAsString);
+            }
+
+            @Override
+            public void onLost(Message message) {
+                String messageAsString = new String(message.getContent());
+                Log.d(TAG, "Lost sight of message: " + messageAsString);
+            }
+        };
     setContentView(R.layout.activity_main);
 
     Bundle bundle = getIntent().getExtras();
@@ -77,4 +110,30 @@ public class MainActivity extends Activity {
     return super.onOptionsItemSelected(item);
   }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        publish("Hello World");
+        subscribe();
+    }
+
+    private void publish(String message) {
+        Log.i(TAG, "Publishing message: " + message);
+        mActiveMessage = new Message(message.getBytes());
+        Nearby.Messages.publish(mGoogleApiClient, mActiveMessage);
+    }
+
+    private void subscribe() {
+        Log.i(TAG, "Subscribing.");
+        Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 }
