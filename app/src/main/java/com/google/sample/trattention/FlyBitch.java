@@ -16,6 +16,7 @@ import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.ParcelUuid;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -94,6 +95,12 @@ public class FlyBitch extends Service  {
                             popUp();
 
 
+
+							// Get instance of Vibrator from current Context
+							Vibrator v = (Vibrator) getSystemService(this.myService.VIBRATOR_SERVICE);
+
+							// Vibrate for 300 milliseconds
+							v.vibrate(1500);
 
 							new android.os.Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
 								@Override
