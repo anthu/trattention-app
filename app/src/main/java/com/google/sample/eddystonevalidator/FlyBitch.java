@@ -71,9 +71,9 @@ public class FlyBitch extends Service  {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
                 super.onScanResult(callbackType, result);
-                Toast toast = Toast.makeText(myService,(CharSequence)(result.getDevice().getName() + new Date().toString()), Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(this.myService,(CharSequence)(result.getDevice().getName() + new Date().toString()), Toast.LENGTH_SHORT);
                 toast.show();
-                //this.myService.popUp();
+				//this.myService.popUp();
             }
 
             @Override
@@ -171,13 +171,8 @@ public class FlyBitch extends Service  {
 
 	@Override
 	public void onDestroy() {
-        bluetoothAdapter.stopLeScan(new BluetoothAdapter.LeScanCallback(){
 
-            @Override
-            public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
 
-            }
-        });
 		leScanner.stopScan(mCallback);
 		if (chatHead != null) windowManager.removeView(chatHead);
 
