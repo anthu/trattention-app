@@ -9,12 +9,14 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.ParcelUuid;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -28,7 +30,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class FlyBitch extends Service  {
@@ -37,8 +41,14 @@ public class FlyBitch extends Service  {
 	BluetoothLeScanner leScanner;
 	private WindowManager windowManager;
 	private ImageView chatHead;
+    private List<ScanFilter> scanFilters;
+    private static final ScanSettings SCAN_SETTINGS =
+            new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).setReportDelay(0)
+                    .build();
     MyScanCallback mCallback;
-
+    private Map<String /* device address */, Beacon> deviceToBeaconMap = new HashMap<>();
+    private static final ParcelUuid EDDYSTONE_SERVICE_UUID =
+            ParcelUuid.fromString("0000FEAA-0000-1000-8000-00805F9B34FB");
 	@Override
 	public IBinder onBind(Intent intent) {
 
@@ -54,26 +64,73 @@ public class FlyBitch extends Service  {
 
 		bluetoothAdapter = bluetoothManager.getAdapter();
 
+        // The Eddystone Service UUID, 0xFEAA.
+
 		leScanner = bluetoothAdapter.getBluetoothLeScanner();
 
 		ScanFilter.Builder builder = new ScanFilter.Builder();
 		builder.setDeviceName("Trattention");
 
-		ScanFilter filter = builder.build();
+        scanFilters = new ArrayList<>();
+        scanFilters.add(new ScanFilter.Builder().setServiceUuid(EDDYSTONE_SERVICE_UUID).build());
 		ScanSettings.Builder settingsBuilder = new ScanSettings.Builder();
 		settingsBuilder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
-
-		ScanSettings settings = settingsBuilder.build();
 		ArrayList<ScanFilter> filterList = new ArrayList<ScanFilter>();
-		filterList.add(filter);
 
         mCallback = new MyScanCallback(this) {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
-                super.onScanResult(callbackType, result);
-                Toast toast = Toast.makeText(myService,(CharSequence)(result.getDevice().getName() + new Date().toString()), Toast.LENGTH_SHORT);
-                toast.show();
-                //this.myService.popUp();
+                ScanRecord scanRecord = result.getScanRecord();
+                if (scanRecord == null) {
+                    return;
+                }
+
+                String deviceAddress = result.getDevice().getAddress();
+                Beacon beacon;
+                if (!deviceToBeaconMap.containsKey(deviceAddress)) {
+                    beacon = new Beacon(deviceAddress, result.getRssi());
+                    deviceToBeaconMap.put(deviceAddress, beacon);
+//                    arrayAdapter.add(beacon);
+//                    boolean bitch = beacon.hasUidFrame;
+                    if (result.getScanRecord().getServiceUuids() != null) {
+                        UidValidator.validate(deviceAddress,result.getScanRecord().getServiceData(result.getScanRecord().getServiceUuids().get(0)),beacon);
+                        if(beacon.uidStatus != null && beacon.uidStatus.uidValue != null && beacon.uidStatus.uidValue.startsWith("6d9d1fe6b2f4a40ae168")) {
+                            Log.d("Bitch ", "onScanResult: " + beacon);
+                            Toast toast = Toast.makeText(myService, (CharSequence) (beacon.uidStatus.uidValue), Toast.LENGTH_SHORT);
+                            toast.show();
+                            popUp();
+                        }
+                    }
+                } else {
+                    deviceToBeaconMap.get(deviceAddress).lastSeenTimestamp = System.currentTimeMillis();
+                    deviceToBeaconMap.get(deviceAddress).rssi = result.getRssi();
+
+                }
+
+                byte[] serviceData = scanRecord.getServiceData(EDDYSTONE_SERVICE_UUID);
+                validateServiceData(deviceAddress, serviceData);
+
+            }
+
+            @Override
+            public void onScanFailed(int errorCode) {
+//                switch (errorCode) {
+//                    case SCAN_FAILED_ALREADY_STARTED:
+//                        logErrorAndShowToast("SCAN_FAILED_ALREADY_STARTED");
+//                        break;
+//                    case SCAN_FAILED_APPLICATION_REGISTRATION_FAILED:
+//                        logErrorAndShowToast("SCAN_FAILED_APPLICATION_REGISTRATION_FAILED");
+//                        break;
+//                    case SCAN_FAILED_FEATURE_UNSUPPORTED:
+//                        logErrorAndShowToast("SCAN_FAILED_FEATURE_UNSUPPORTED");
+//                        break;
+//                    case SCAN_FAILED_INTERNAL_ERROR:
+//                        logErrorAndShowToast("SCAN_FAILED_INTERNAL_ERROR");
+//                        break;
+//                    default:
+//                        logErrorAndShowToast("Scan failed, unknown error code");
+//                        break;
+//                }
             }
 
             @Override
@@ -81,20 +138,41 @@ public class FlyBitch extends Service  {
                 super.onBatchScanResults(results);
             }
 
-            @Override
-            public void onScanFailed(int errorCode) {
-                super.onScanFailed(errorCode);
-                this.myService.popUp();
-            }
         };
 
-		leScanner.startScan(/*filterList, settings,*/ mCallback);
+		leScanner.startScan(filterList, SCAN_SETTINGS, mCallback);
 
 
 
 
 	}
-
+    private void validateServiceData(String deviceAddress, byte[] serviceData) {
+        Beacon beacon = deviceToBeaconMap.get(deviceAddress);
+        if (serviceData == null) {
+            String err = "Null Eddystone service data";
+            beacon.frameStatus.nullServiceData = err;
+//            logDeviceError(deviceAddress, err);
+            return;
+        }
+//        Log.v(TAG, deviceAddress + " " + Utils.toHexString(serviceData));
+        switch (serviceData[0]) {
+            case Constants.UID_FRAME_TYPE:
+                UidValidator.validate(deviceAddress, serviceData, beacon);
+                break;
+            case Constants.TLM_FRAME_TYPE:
+                TlmValidator.validate(deviceAddress, serviceData, beacon);
+                break;
+            case Constants.URL_FRAME_TYPE:
+                UrlValidator.validate(deviceAddress, serviceData, beacon);
+                break;
+            default:
+                String err = String.format("Invalid frame type byte %02X", serviceData[0]);
+                beacon.frameStatus.invalidFrameType = err;
+//                logDeviceError(deviceAddress, err);
+                break;
+        }
+//        arrayAdapter.notifyDataSetChanged();
+    }
 	private class MyScanCallback extends ScanCallback {
 			FlyBitch myService;
 
@@ -165,19 +243,13 @@ public class FlyBitch extends Service  {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
-		return START_NOT_STICKY;
+		return START_STICKY;
 	}
 
 
 	@Override
 	public void onDestroy() {
-        bluetoothAdapter.stopLeScan(new BluetoothAdapter.LeScanCallback(){
 
-            @Override
-            public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-
-            }
-        });
 		leScanner.stopScan(mCallback);
 		if (chatHead != null) windowManager.removeView(chatHead);
 

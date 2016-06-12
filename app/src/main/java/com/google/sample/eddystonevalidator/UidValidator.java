@@ -38,6 +38,7 @@ public class UidValidator {
     beacon.hasUidFrame = true;
 
     // Tx power should have reasonable values.
+    if (serviceData == null || serviceData.length < 1) { return; }
     int txPower = (int) serviceData[1];
     beacon.uidStatus.txPower = txPower;
     if (txPower < MIN_EXPECTED_TX_POWER || txPower > MAX_EXPECTED_TX_POWER) {
