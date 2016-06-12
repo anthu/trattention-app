@@ -96,8 +96,6 @@ public class FlyBitch extends Service  {
                 if (!deviceToBeaconMap.containsKey(deviceAddress)) {
                     beacon = new Beacon(deviceAddress, result.getRssi());
                     deviceToBeaconMap.put(deviceAddress, beacon);
-//                    arrayAdapter.add(beacon);
-//                    boolean bitch = beacon.hasUidFrame;
                     if (result.getScanRecord().getServiceUuids() != null) {
                         UidValidator.validate(deviceAddress,result.getScanRecord().getServiceData(result.getScanRecord().getServiceUuids().get(0)),beacon);
                         if(beacon.uidStatus != null && beacon.uidStatus.uidValue != null && beacon.uidStatus.uidValue.startsWith("6d9d1fe6b2f4a40ae168")) {
@@ -114,18 +112,6 @@ public class FlyBitch extends Service  {
 									if (chatHead != null) windowManager.removeView(chatHead);
 								}}
 							, 5000);
-							/*((Context)this.myService).runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									TimerTask timerTask = new TimerTask(){
-										@Override
-										public void run() {
-											 if (chatHead != null) windowManager.removeView(chatHead);
-										}};
-
-									new Timer().schedule(timerTask, 5000);
-								}
-							});*/
 
 						}
                     }
@@ -141,23 +127,6 @@ public class FlyBitch extends Service  {
 
             @Override
             public void onScanFailed(int errorCode) {
-//                switch (errorCode) {
-//                    case SCAN_FAILED_ALREADY_STARTED:
-//                        logErrorAndShowToast("SCAN_FAILED_ALREADY_STARTED");
-//                        break;
-//                    case SCAN_FAILED_APPLICATION_REGISTRATION_FAILED:
-//                        logErrorAndShowToast("SCAN_FAILED_APPLICATION_REGISTRATION_FAILED");
-//                        break;
-//                    case SCAN_FAILED_FEATURE_UNSUPPORTED:
-//                        logErrorAndShowToast("SCAN_FAILED_FEATURE_UNSUPPORTED");
-//                        break;
-//                    case SCAN_FAILED_INTERNAL_ERROR:
-//                        logErrorAndShowToast("SCAN_FAILED_INTERNAL_ERROR");
-//                        break;
-//                    default:
-//                        logErrorAndShowToast("Scan failed, unknown error code");
-//                        break;
-//                }
             }
 
             @Override
@@ -178,10 +147,9 @@ public class FlyBitch extends Service  {
         if (serviceData == null) {
             String err = "Null Eddystone service data";
             beacon.frameStatus.nullServiceData = err;
-//            logDeviceError(deviceAddress, err);
             return;
         }
-//        Log.v(TAG, deviceAddress + " " + Utils.toHexString(serviceData));
+
         switch (serviceData[0]) {
             case Constants.UID_FRAME_TYPE:
                 UidValidator.validate(deviceAddress, serviceData, beacon);
