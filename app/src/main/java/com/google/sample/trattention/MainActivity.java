@@ -47,6 +47,10 @@ public class MainActivity extends FragmentActivity  implements GoogleApiClient.C
     @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Bundle bundle = getIntent().getExtras();
+
         final ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
         toggleButton.setOnClickListener(new View.OnClickListener() {
 
@@ -90,9 +94,7 @@ public class MainActivity extends FragmentActivity  implements GoogleApiClient.C
                 Log.d(TAG, "Lost sight of message: " + messageAsString);
             }
         };
-    setContentView(R.layout.activity_main);
 
-    Bundle bundle = getIntent().getExtras();
   }
 
     @Override
