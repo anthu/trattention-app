@@ -109,7 +109,6 @@ public class FlyBitch extends Service  {
 
                 byte[] serviceData = scanRecord.getServiceData(EDDYSTONE_SERVICE_UUID);
                 validateServiceData(deviceAddress, serviceData);
-
             }
 
             @Override
@@ -249,7 +248,6 @@ public class FlyBitch extends Service  {
 
 	@Override
 	public void onDestroy() {
-
 		leScanner.stopScan(mCallback);
 		if (chatHead != null) windowManager.removeView(chatHead);
 
