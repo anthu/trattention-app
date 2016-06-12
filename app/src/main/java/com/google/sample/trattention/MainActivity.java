@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -46,6 +47,7 @@ public class MainActivity extends FragmentActivity  implements GoogleApiClient.C
     @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+        ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
 
         mMessageListener = new MessageListener() {
             @Override

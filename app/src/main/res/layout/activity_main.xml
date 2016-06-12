@@ -1,29 +1,65 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:id="@+id/fragment"
-          android:name="com.google.sample.trattention.MainActivityFragment"
-          tools:layout="@layout/fragment_main"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent">
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:src="@drawable/background"
+        android:scaleType="centerCrop"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:src="@drawable/logo"
+            android:id="@+id/imageView"
+            android:layout_alignBottom="@+id/textViewAdress"
+            android:layout_centerHorizontal="true" />
 
-            <Button
-            android:id="@+id/button1"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="100dp"
-            android:text="@string/start" />
+            android:text="Start Trattention"
+            android:id="@+id/textView"
+            android:textSize="25sp"
+            android:textColor="#FFFFFF"
+            android:layout_alignBaseline="@+id/toggleButton"
+            android:layout_alignBottom="@+id/toggleButton"
+            android:layout_alignStart="@+id/textViewAdress" />
 
-            <Button
-            android:id="@+id/button2"
+        <ToggleButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/button1"
-            android:layout_alignRight="@+id/button1"
-            android:layout_below="@+id/button1"
-            android:layout_marginTop="10dp"
-            android:text="@string/stop" />
+            android:text="New ToggleButton"
+            android:id="@+id/toggleButton"
+            android:textSize="25sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginEnd="31dp"
+            android:layout_marginTop="53dp"
+            android:layout_below="@+id/imageView"
+            android:layout_alignParentEnd="true" />
 
-    </fragment>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Europaplatz, Karlsruhe"
+            android:textSize="25sp"
+            android:textColor="#FFFFFF"
+            android:id="@+id/textViewAdress"
+            android:layout_centerVertical="true"
+            android:layout_alignEnd="@+id/imageView" />
+
+        <ImageButton
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:id="@+id/imageButtonHome"
+            android:src="@drawable/home"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/imageView" />
+
+
+    </RelativeLayout>
+
+    </RelativeLayout>
