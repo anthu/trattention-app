@@ -11,11 +11,13 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.ParcelUuid;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.Gravity;
@@ -86,7 +88,9 @@ public class FlyBitch extends Service  {
                 if (!deviceToBeaconMap.containsKey(deviceAddress)) {
                     beacon = new Beacon(deviceAddress, result.getRssi());
                     deviceToBeaconMap.put(deviceAddress, beacon);
-                    if (result.getScanRecord().getServiceUuids() != null) {
+                    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                    boolean isScreenOn = pm.isInteractive();
+                    if (result.getScanRecord().getServiceUuids() != null && isScreenOn) {
                         UidValidator.validate(deviceAddress,result.getScanRecord().getServiceData(result.getScanRecord().getServiceUuids().get(0)),beacon);
                         if(beacon.uidStatus != null && beacon.uidStatus.uidValue != null && beacon.uidStatus.uidValue.startsWith("6d9d1fe6b2f4a40ae168")) {
                             Log.d("Bitch ", "onScanResult: " + beacon);
