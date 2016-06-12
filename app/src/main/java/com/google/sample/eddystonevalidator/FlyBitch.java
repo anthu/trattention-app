@@ -2,6 +2,7 @@ package com.google.sample.eddystonevalidator;
 
 
 
+import android.app.Activity;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -12,10 +13,12 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.ParcelUuid;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +36,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Handler;
 
 
 public class FlyBitch extends Service  {
@@ -99,7 +105,29 @@ public class FlyBitch extends Service  {
                             Toast toast = Toast.makeText(myService, (CharSequence) (beacon.uidStatus.uidValue), Toast.LENGTH_SHORT);
                             toast.show();
                             popUp();
-                        }
+
+
+
+							new android.os.Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									if (chatHead != null) windowManager.removeView(chatHead);
+								}}
+							, 5000);
+							/*((Context)this.myService).runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									TimerTask timerTask = new TimerTask(){
+										@Override
+										public void run() {
+											 if (chatHead != null) windowManager.removeView(chatHead);
+										}};
+
+									new Timer().schedule(timerTask, 5000);
+								}
+							});*/
+
+						}
                     }
                 } else {
                     deviceToBeaconMap.get(deviceAddress).lastSeenTimestamp = System.currentTimeMillis();
@@ -249,7 +277,6 @@ public class FlyBitch extends Service  {
 	@Override
 	public void onDestroy() {
 		leScanner.stopScan(mCallback);
-		if (chatHead != null) windowManager.removeView(chatHead);
 
 		super.onDestroy();
 	}
