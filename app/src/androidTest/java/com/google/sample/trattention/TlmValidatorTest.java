@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sample.eddystonevalidator;
+package com.google.sample.trattention;
 
-import static com.google.sample.eddystonevalidator.Constants.TLM_FRAME_TYPE;
-import static com.google.sample.eddystonevalidator.TestUtils.DEVICE_ADDRESS;
-import static com.google.sample.eddystonevalidator.TestUtils.INITIAL_RSSI;
+import static com.google.sample.trattention.Constants.TLM_FRAME_TYPE;
+import static com.google.sample.trattention.TestUtils.DEVICE_ADDRESS;
+import static com.google.sample.trattention.TestUtils.INITIAL_RSSI;
 
 import android.test.AndroidTestCase;
 

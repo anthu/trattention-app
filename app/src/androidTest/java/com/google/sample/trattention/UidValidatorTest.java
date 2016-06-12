@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sample.eddystonevalidator;
+package com.google.sample.trattention;
 
-import static com.google.sample.eddystonevalidator.Constants.MAX_EXPECTED_TX_POWER;
-import static com.google.sample.eddystonevalidator.Constants.MIN_EXPECTED_TX_POWER;
-import static com.google.sample.eddystonevalidator.Constants.UID_FRAME_TYPE;
-import static com.google.sample.eddystonevalidator.TestUtils.DEVICE_ADDRESS;
-import static com.google.sample.eddystonevalidator.TestUtils.INITIAL_RSSI;
-import static com.google.sample.eddystonevalidator.TestUtils.TX_POWER_LOW;
+import static com.google.sample.trattention.Constants.MAX_EXPECTED_TX_POWER;
+import static com.google.sample.trattention.Constants.MIN_EXPECTED_TX_POWER;
+import static com.google.sample.trattention.Constants.UID_FRAME_TYPE;
+import static com.google.sample.trattention.TestUtils.DEVICE_ADDRESS;
+import static com.google.sample.trattention.TestUtils.INITIAL_RSSI;
+import static com.google.sample.trattention.TestUtils.TX_POWER_LOW;
 
 import android.test.AndroidTestCase;
 

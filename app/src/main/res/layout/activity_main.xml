@@ -1,7 +1,72 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:id="@+id/fragment"
-          android:name="com.google.sample.eddystonevalidator.MainActivityFragment"
-          tools:layout="@layout/fragment_main"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"/>
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:src="@drawable/background"
+        android:scaleType="centerCrop"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:src="@drawable/logo"
+            android:id="@+id/imageView"
+            android:layout_above="@+id/imageButtonHome"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start Trattention"
+            android:id="@+id/textView"
+            android:textSize="25sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginStart="16dp"
+            android:layout_alignBottom="@+id/toggleButton"
+            android:layout_alignParentStart="true" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New ToggleButton"
+            android:id="@+id/toggleButton"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:layout_below="@+id/textViewAdress"
+            android:layout_alignEnd="@+id/imageButtonHome"
+            android:layout_marginTop="20dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Europaplatz"
+            android:textSize="25sp"
+            android:textColor="#FFFFFF"
+            android:id="@+id/textViewAdress"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_toStartOf="@+id/toggleButton" />
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/imageButtonHome"
+            android:src="@drawable/home"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/imageView" />
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/imageButtonGo"
+            android:src="@drawable/go"
+            android:layout_alignTop="@+id/imageButtonHome"
+            android:layout_alignStart="@+id/toggleButton" />
+
+    </RelativeLayout>
+
+    </RelativeLayout>

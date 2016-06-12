@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sample.eddystonevalidator;
+package com.google.sample.trattention;
 
 import android.Manifest;
 import android.app.Activity;
@@ -47,12 +47,25 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Main UI and logic for scanning and validation of results.
@@ -91,6 +104,7 @@ public class MainActivityFragment extends Fragment {
   public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     init();
+
     ArrayList<Beacon> arrayList = new ArrayList<>();
     arrayAdapter = new BeaconArrayAdapter(getActivity(), R.layout.beacon_list_item, arrayList);
     scanFilters = new ArrayList<>();
@@ -144,6 +158,49 @@ public class MainActivityFragment extends Fragment {
     sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
     onLostTimeoutMillis =
         sharedPreferences.getInt(SettingsActivity.ON_LOST_TIMEOUT_SECS_KEY, 5) * 1000;
+  }
+
+  public static String executePost(int start, int end) {
+    OkHttpClient client = new OkHttpClient();
+    String response = null;
+
+    Request request = new Request.Builder()
+            .url("http://kvv.mobilesticket.de/gateway/flow/kvv/ListConnections?=&SID="+ start + "&DID=" + end + "&DATE=11.06.2016&TIME=20%3A10")
+            .get()
+            .addHeader("cache-control", "no-cache")
+            .addHeader("postman-token", "367ff524-0aed-b83d-2a2d-40f2ac7cecca")
+            .build();
+
+
+
+    try {
+      response = client.newCall(request).execute().body().string();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return response;
+  }
+
+  public static String findStop(String query) {
+    OkHttpClient client = new OkHttpClient();
+    String response = null;
+
+    MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+    RequestBody body = RequestBody.create(mediaType, "AI=111&SN=" + query);
+    Request request = new Request.Builder()
+            .url("http://kvv.mobilesticket.de/gateway/GS")
+            .post(body)
+            .addHeader("x-ver", "KVV3.1")
+            .addHeader("cache-control", "no-cache")
+            .addHeader("content-type", "application/x-www-form-urlencoded")
+            .build();
+
+    try {
+      response = client.newCall(request).execute().body().string();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return response;
   }
 
   @Override

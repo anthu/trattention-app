@@ -6,7 +6,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.google.sample.eddystonevalidator"
+        applicationId "com.google.sample.trattention"
         minSdkVersion 22
         targetSdkVersion 23
         versionCode 1
@@ -22,4 +22,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.google.android.gms:play-services-nearby:9.0.0'
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
 }

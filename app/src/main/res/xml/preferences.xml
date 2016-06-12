@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.sample.eddystonevalidator.NumberPickerPreference
+    <com.google.sample.trattention.NumberPickerPreference
         android:key="onLostTimeoutSecs"
         android:title="On lost timeout"
         android:summary=""
