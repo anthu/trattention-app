@@ -67,6 +67,7 @@ public class MainActivity extends FragmentActivity  implements GoogleApiClient.C
             }
         };
         setContentView(R.layout.activity_main);
+        getActionBar().hide();
         final ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
         toggleButton.setOnClickListener(new View.OnClickListener() {
 
