@@ -1,4 +1,4 @@
-package com.google.sample.eddystonevalidator;
+package com.google.sample.trattention;
 
 import android.app.Activity;
 import android.os.Bundle;

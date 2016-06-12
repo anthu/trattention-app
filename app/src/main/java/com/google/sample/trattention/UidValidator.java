@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sample.eddystonevalidator;
+package com.google.sample.trattention;
 
-import static com.google.sample.eddystonevalidator.Constants.MAX_EXPECTED_TX_POWER;
-import static com.google.sample.eddystonevalidator.Constants.MIN_EXPECTED_TX_POWER;
+import static com.google.sample.trattention.Constants.MAX_EXPECTED_TX_POWER;
+import static com.google.sample.trattention.Constants.MIN_EXPECTED_TX_POWER;
 
 import android.util.Log;
 

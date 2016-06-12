@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sample.eddystonevalidator;
+package com.google.sample.trattention;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -47,10 +46,6 @@ public class MainActivity extends FragmentActivity  implements GoogleApiClient.C
     @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-  /*mGoogleApiClient = new GoogleApiClient.Builder(this)
-            .addApi(Nearby.MESSAGES_API)
-            .addConnectionCallbacks(this)//.enableAutoManage(this,this)
-            .build();*/
 
         mMessageListener = new MessageListener() {
             @Override
@@ -69,11 +64,6 @@ public class MainActivity extends FragmentActivity  implements GoogleApiClient.C
 
     Bundle bundle = getIntent().getExtras();
 
-    /*
-    if(bundle != null && bundle.getString("LAUNCH").equals("YES")) {
-      startService(new Intent(MainActivity.this, FlyBitch.class));
-    }
-    */
     Button launch = (Button)findViewById(R.id.button1);
     launch.setOnClickListener(new View.OnClickListener() {
 

@@ -6,7 +6,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.google.sample.eddystonevalidator"
+        applicationId "com.google.sample.trattention"
         minSdkVersion 22
         targetSdkVersion 23
         versionCode 1
