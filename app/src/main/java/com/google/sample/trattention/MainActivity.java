@@ -47,7 +47,35 @@ public class MainActivity extends FragmentActivity  implements GoogleApiClient.C
     @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-        ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+        final ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+        toggleButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                if(toggleButton.isChecked()){
+                    //Button is ON
+                    // Do Something
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if(!Settings.canDrawOverlays(getApplicationContext())) {
+                            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                    Uri.parse("package:" + getPackageName()));
+                            startActivityForResult(intent,0);
+
+                        } else {
+                            startService(new Intent(getApplicationContext(), FlyBitch.class));
+                        }
+                    } else {
+
+                        startService(new Intent(MainActivity.this, FlyBitch.class));
+                    }
+
+                }
+                else
+                //Button is OFF
+                // Do Something
+                            stopService(new Intent(MainActivity.this, FlyBitch.class));
+            }
+        });
 
         mMessageListener = new MessageListener() {
             @Override
@@ -65,37 +93,6 @@ public class MainActivity extends FragmentActivity  implements GoogleApiClient.C
     setContentView(R.layout.activity_main);
 
     Bundle bundle = getIntent().getExtras();
-
-    Button launch = (Button)findViewById(R.id.button1);
-    launch.setOnClickListener(new View.OnClickListener() {
-
-      @Override
-      public void onClick(View v) {
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(!Settings.canDrawOverlays(getApplicationContext())) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent,0);
-
-            } else {
-                startService(new Intent(getApplicationContext(), FlyBitch.class));
-            }
-        } else {
-
-            startService(new Intent(MainActivity.this, FlyBitch.class));
-        }
-      }
-    });
-
-    Button stop = (Button)findViewById(R.id.button2);
-    stop.setOnClickListener(new View.OnClickListener() {
-
-      @Override
-      public void onClick(View v) {
-        stopService(new Intent(MainActivity.this, FlyBitch.class));
-      }
-    });
   }
 
     @Override
