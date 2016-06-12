@@ -47,10 +47,26 @@ public class MainActivity extends FragmentActivity  implements GoogleApiClient.C
     @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
 
         Bundle bundle = getIntent().getExtras();
 
+
+
+        mMessageListener = new MessageListener() {
+            @Override
+            public void onFound(Message message) {
+                String messageAsString = new String(message.getContent());
+                Log.d(TAG, "Found message: " + messageAsString);
+            }
+
+            @Override
+            public void onLost(Message message) {
+                String messageAsString = new String(message.getContent());
+                Log.d(TAG, "Lost sight of message: " + messageAsString);
+            }
+        };
+        setContentView(R.layout.activity_main);
         final ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
         toggleButton.setOnClickListener(new View.OnClickListener() {
 
@@ -75,25 +91,11 @@ public class MainActivity extends FragmentActivity  implements GoogleApiClient.C
 
                 }
                 else
-                //Button is OFF
-                // Do Something
-                            stopService(new Intent(MainActivity.this, FlyBitch.class));
+                    //Button is OFF
+                    // Do Something
+                    stopService(new Intent(MainActivity.this, FlyBitch.class));
             }
         });
-
-        mMessageListener = new MessageListener() {
-            @Override
-            public void onFound(Message message) {
-                String messageAsString = new String(message.getContent());
-                Log.d(TAG, "Found message: " + messageAsString);
-            }
-
-            @Override
-            public void onLost(Message message) {
-                String messageAsString = new String(message.getContent());
-                Log.d(TAG, "Lost sight of message: " + messageAsString);
-            }
-        };
 
   }
 

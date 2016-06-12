@@ -11,11 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ImageView
-            android:layout_width="220dp"
-            android:layout_height="220dp"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
             android:src="@drawable/logo"
             android:id="@+id/imageView"
-            android:layout_alignBottom="@+id/textViewAdress"
+            android:layout_above="@+id/imageButtonHome"
             android:layout_centerHorizontal="true" />
 
         <TextView
@@ -25,23 +25,22 @@
             android:id="@+id/textView"
             android:textSize="25sp"
             android:textColor="#FFFFFF"
-            android:layout_alignBaseline="@+id/toggleButton"
+            android:layout_marginStart="38dp"
             android:layout_alignBottom="@+id/toggleButton"
-            android:layout_alignStart="@+id/textViewAdress" />
+            android:layout_alignParentStart="true" />
 
         <ToggleButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New ToggleButton"
             android:id="@+id/toggleButton"
-            android:textSize="25sp"
+            android:textSize="18sp"
             android:textColor="#FFFFFF"
-            android:layout_marginEnd="31dp"
-            android:layout_marginTop="53dp"
-            android:layout_below="@+id/imageView"
-            android:layout_alignParentEnd="true" />
+            android:layout_below="@+id/textViewAdress"
+            android:layout_alignEnd="@+id/imageButtonHome"
+            android:layout_marginTop="20dp" />
 
-        <TextField
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Europaplatz, Karlsruhe"
@@ -52,14 +51,21 @@
             android:layout_alignStart="@+id/imageView"
             android:layout_toStartOf="@+id/toggleButton" />
 
-        <ImageButton
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:id="@+id/imageButtonHome"
             android:src="@drawable/home"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/imageView" />
 
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/imageButtonGo"
+            android:src="@drawable/go"
+            android:layout_alignTop="@+id/imageButtonHome"
+            android:layout_alignStart="@+id/toggleButton" />
 
     </RelativeLayout>
 
